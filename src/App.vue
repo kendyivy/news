@@ -1,39 +1,41 @@
 <template>
   <div class="container">
-    <h3>{{ title }}  </h3>
-    <form>
-    <textarea placeholder="Add new task" v-model="newTask"></textarea>
-    <p>{{newTask}}</p>
-    <button type="button" v-on:click="addTask">Add Task{{tasks.length}} </button>
-    </form>
-    <ul>
-    <li v-for="task in tasks">{{ task}}</li>
-    </ul>
+   <div v-for="article in news">
+      <img :src="article.urlToImage" alt=""> 
+     <h3>{{article.title}}</h3>
+     <h4>{{article.author}}</h4>
+     <p>{{article.description}}</p>
+
+    </div>
 
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+let url= "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=98b4d0418d994067b20bc487a55d994e"
+
+const data={
+news:[]
+}
 export default {
   data: function() {
-    return {
-      title: 'My Todo List',
-      newTask: 'This is a SAMPLE', 
+    return  data
       
-      
-      tasks:[
-      
-
-      ]
-    }
+  },
+  created(){
+    this.loadNews();
   },
   methods: {
-  	addTask() {
-  		
-  		this.tasks.unshift(this.newTask);
-  		this.newTask = '';
-
-  	}
+  	loadNews(){
+    axios.get(url).then(function(response){
+    console.log(response.data.articles)
+    data.news=response.data.articles
+    }).catch(function(error) {
+    console.log(error.message)
+    })
+    }
+  
   }
 }
 </script>
